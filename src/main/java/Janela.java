@@ -123,19 +123,12 @@ public class Janela extends javax.swing.JFrame {
 		ExecCmd cmd = new ExecCmd(cmdTxtField.getText());
 		execCmd.add(cmd);
 		cmd.start();
+		updateTable();
         }//GEN-LAST:event_execButtonActionPerformed
 
         private void atualizarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarButtonActionPerformed
 		// botao atualizar lista
-		listModel.clear();
-		int i = 0;
-		for (ExecCmd e : execCmd) {
-			if (e.isAlive()) {
-				listModel.addElement(e.getCmd());
-				e.setIndex(i);
-				i++;
-			}
-		}
+		updateTable();
         }//GEN-LAST:event_atualizarButtonActionPerformed
 
         private void fecharButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharButtonActionPerformed
@@ -143,12 +136,14 @@ public class Janela extends javax.swing.JFrame {
 		int selecionado = jList1.getSelectedIndex();
 		if (selecionado >= 0) {
 			for (ExecCmd c : execCmd) {
-				if (c.getIndex() == selecionado) {
+				if (c.getIndex() == selecionado && !c.terminado()) {
 					c.cancela();
+					updateTable();
 					break;
 				}
 			}
 		}
+		updateTable();
         }//GEN-LAST:event_fecharButtonActionPerformed
 
 	/**
@@ -184,6 +179,18 @@ public class Janela extends javax.swing.JFrame {
 				new Janela().setVisible(true);
 			}
 		});
+	}
+
+	public void updateTable() {
+		listModel.clear();
+		int i = 0;
+		for (ExecCmd e : execCmd) {
+			if (e.isAlive()) {
+				listModel.addElement(e.getCmd());
+				e.setIndex(i);
+				i++;
+			}
+		}
 	}
 
         // Variables declaration - do not modify//GEN-BEGIN:variables

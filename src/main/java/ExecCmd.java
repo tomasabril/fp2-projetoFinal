@@ -24,6 +24,7 @@ public class ExecCmd extends Thread {
 		try {
 			proc = rt.exec(cmd);
 			proc.waitFor();
+			//janela.updateTable();
 		} catch (IOException | InterruptedException ex) {
 			//System.out.println("erro na execucao");
 			Logger.getLogger(ExecCmd.class.getName()).log(Level.SEVERE, null, ex);
