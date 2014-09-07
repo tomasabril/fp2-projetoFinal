@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.UIManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -156,12 +157,17 @@ public class Janela extends javax.swing.JFrame {
 		 * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 		 */
 		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
+			// tema padrao do sistema
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			// tema padrao cross plataform
+//			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			//tema nimbus
+//			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//				if ("Nimbus".equals(info.getName())) {
+//					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//					break;
+//				}
+//			}
 		} catch (ClassNotFoundException ex) {
 			java.util.logging.Logger.getLogger(Janela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
