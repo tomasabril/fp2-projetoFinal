@@ -32,12 +32,17 @@ public class ExecCmd extends Thread {
 		}
 	}
 
-	public void cancela() {
-		proc.destroy();
+	public synchronized void cancela() {
+		if (proc != null) {
+			proc.destroy();
+		}
 	}
 
-	public Boolean terminado() {
-		return !proc.isAlive();
+	public synchronized Boolean terminado() {
+		//if (proc != null) {
+			return !proc.isAlive();
+		//}
+		//return true;
 	}
 
 	public String getCmd() {
@@ -48,7 +53,7 @@ public class ExecCmd extends Thread {
 		return index;
 	}
 
-	public void setIndex(int index) {
+	public synchronized void setIndex(int index) {
 		this.index = index;
 	}
 

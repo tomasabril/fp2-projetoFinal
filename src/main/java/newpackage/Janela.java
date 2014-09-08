@@ -38,7 +38,7 @@ public class Janela extends javax.swing.JFrame {
 		
 		Timer updateList = new Timer("atualiza-lista");
 		TimerTask updateListTask = new UpdateListTask();
-		updateList.schedule(updateListTask, 100, 1000);
+		updateList.scheduleAtFixedRate(updateListTask, 0, 333);
 	}
 
 	/**
@@ -157,13 +157,6 @@ public class Janela extends javax.swing.JFrame {
 		ExecCmd cmd = new ExecCmd(cmdTxtField.getText());
 		execCmd.add(cmd);
 		cmd.start();
-		///updateTable();
-//		try {
-//			cmd.wait();
-//			updateTable();
-//		} catch (InterruptedException ex) {
-//			Logger.getLogger(Janela.class.getName()).log(Level.SEVERE, null, ex);
-//		}
 
         }//GEN-LAST:event_execButtonActionPerformed
 
