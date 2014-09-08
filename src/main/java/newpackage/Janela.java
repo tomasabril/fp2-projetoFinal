@@ -1,7 +1,14 @@
+package newpackage;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 /*
@@ -24,6 +31,14 @@ public class Janela extends javax.swing.JFrame {
 	public Janela() {
 		initComponents();
 		jList1.setModel(listModel);
+		atualizarButton.setVisible(false);
+		
+		ImageIcon img = new ImageIcon("dwarf.png");
+		this.setIconImage(img.getImage());
+		
+		Timer updateList = new Timer("atualiza-lista");
+		TimerTask updateListTask = new UpdateListTask();
+		updateList.schedule(updateListTask, 100, 1000);
 	}
 
 	/**
@@ -42,14 +57,23 @@ public class Janela extends javax.swing.JFrame {
                 execButton = new javax.swing.JButton();
                 jLabel1 = new javax.swing.JLabel();
                 atualizarButton = new javax.swing.JButton();
+                jScrollPane2 = new javax.swing.JScrollPane();
+                jTextArea1 = new javax.swing.JTextArea();
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
                 setTitle("Gerenciador de Tarefas");
+                setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                setIconImages(null);
 
                 jList1.setModel(new javax.swing.AbstractListModel() {
                         String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
                         public int getSize() { return strings.length; }
                         public Object getElementAt(int i) { return strings[i]; }
+                });
+                jList1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+                        public void mouseMoved(java.awt.event.MouseEvent evt) {
+                                jList1MouseMoved(evt);
+                        }
                 });
                 jScrollPane1.setViewportView(jList1);
 
@@ -76,6 +100,12 @@ public class Janela extends javax.swing.JFrame {
                         }
                 });
 
+                jTextArea1.setEditable(false);
+                jTextArea1.setColumns(20);
+                jTextArea1.setRows(5);
+                jTextArea1.setText("exemplos de comandos:\nnotepad\ncalc\npaint");
+                jScrollPane2.setViewportView(jTextArea1);
+
                 javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
                 getContentPane().setLayout(layout);
                 layout.setHorizontalGroup(
@@ -84,18 +114,19 @@ public class Janela extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jScrollPane1)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
+                                                .addComponent(atualizarButton))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(fecharButton))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(cmdTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(execButton))
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
-                                                .addComponent(atualizarButton)))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(cmdTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                                        .addComponent(execButton)
+                                                        .addComponent(jScrollPane2))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
                 );
                 layout.setVerticalGroup(
@@ -106,14 +137,16 @@ public class Janela extends javax.swing.JFrame {
                                         .addComponent(jLabel1)
                                         .addComponent(atualizarButton))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fecharButton)
                                 .addGap(8, 8, 8)
                                 .addComponent(cmdTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(execButton)
-                                .addContainerGap())
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15))
                 );
 
                 pack();
@@ -124,7 +157,14 @@ public class Janela extends javax.swing.JFrame {
 		ExecCmd cmd = new ExecCmd(cmdTxtField.getText());
 		execCmd.add(cmd);
 		cmd.start();
-		updateTable();
+		///updateTable();
+//		try {
+//			cmd.wait();
+//			updateTable();
+//		} catch (InterruptedException ex) {
+//			Logger.getLogger(Janela.class.getName()).log(Level.SEVERE, null, ex);
+//		}
+
         }//GEN-LAST:event_execButtonActionPerformed
 
         private void atualizarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarButtonActionPerformed
@@ -139,13 +179,18 @@ public class Janela extends javax.swing.JFrame {
 			for (ExecCmd c : execCmd) {
 				if (c.getIndex() == selecionado && !c.terminado()) {
 					c.cancela();
-					updateTable();
+					//updateTable();
 					break;
 				}
 			}
 		}
-		updateTable();
+		//updateTable();
         }//GEN-LAST:event_fecharButtonActionPerformed
+
+        private void jList1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseMoved
+		// quando o mouse mover
+		//updateTable();
+        }//GEN-LAST:event_jList1MouseMoved
 
 	/**
 	 * @param args the command line arguments
@@ -187,7 +232,7 @@ public class Janela extends javax.swing.JFrame {
 		});
 	}
 
-	public void updateTable() {
+	public synchronized void updateTable() {
 		listModel.clear();
 		int i = 0;
 		for (ExecCmd e : execCmd) {
@@ -195,6 +240,18 @@ public class Janela extends javax.swing.JFrame {
 				listModel.addElement(e.getCmd());
 				e.setIndex(i);
 				i++;
+			}
+		}
+	}
+
+	public class UpdateListTask extends TimerTask {
+
+		@Override
+		public void run() {
+			int selecionado = jList1.getSelectedIndex();
+			updateTable();
+			if (selecionado >= 0) {
+				jList1.setSelectedIndex(selecionado);
 			}
 		}
 	}
@@ -207,5 +264,7 @@ public class Janela extends javax.swing.JFrame {
         private javax.swing.JLabel jLabel1;
         private javax.swing.JList jList1;
         private javax.swing.JScrollPane jScrollPane1;
+        private javax.swing.JScrollPane jScrollPane2;
+        private javax.swing.JTextArea jTextArea1;
         // End of variables declaration//GEN-END:variables
 }

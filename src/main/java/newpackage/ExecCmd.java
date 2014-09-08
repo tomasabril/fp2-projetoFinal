@@ -1,3 +1,4 @@
+package newpackage;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ public class ExecCmd extends Thread {
 		try {
 			proc = rt.exec(cmd);
 			proc.waitFor();
-			//janela.updateTable();
+			//Janela.updateTable();
 		} catch (IOException | InterruptedException ex) {
 			//System.out.println("erro na execucao");
 			Logger.getLogger(ExecCmd.class.getName()).log(Level.SEVERE, null, ex);
